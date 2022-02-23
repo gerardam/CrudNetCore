@@ -52,10 +52,15 @@ namespace DemoMVC.Controllers
         // POST: PadreController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public IActionResult Create([Bind("Id,Nombre,Edad,Telefono,Domicilio,Hijos")] Padre padre)
         {
             try
             {
+                if (ModelState.IsValid)
+                {
+                    new PadreCrud(_context).Insertar(padre);
+                    return RedirectToAction(nameof(Index));
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -65,19 +70,54 @@ namespace DemoMVC.Controllers
         }
 
         // GET: PadreController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Padre datos = new PadreCrud(_context).ObtenerDetalle(id);
+            if (datos == null)
+            {
+                return NotFound();
+            }
+
+            return View(datos);
         }
 
         // POST: PadreController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public IActionResult Edit(int id, [Bind("Id,Nombre,Edad,Telefono,Domicilio,Hijos")] Padre padre)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (id != padre.Id)
+                {
+                    return NotFound();
+                }
+
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        new PadreCrud(_context).Actualizar(padre);
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!ExisteRegistro(padre.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(padre);
             }
             catch
             {
@@ -86,24 +126,41 @@ namespace DemoMVC.Controllers
         }
 
         // GET: PadreController/Delete/5
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            PadreTabla datos = new PadreCrud(_context).ObtenerEliminar(id);
+            if (datos == null)
+            {
+                return NotFound();
+            }
+
+            return View(datos);
         }
 
         // POST: PadreController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public IActionResult Delete(int id)
         {
             try
             {
+                int datos = new PadreCrud(_context).Eliminar(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
                 return View();
             }
+        }
+
+        private bool ExisteRegistro(int id)
+        {
+            return _context.Padres.Any(e => e.Id == id);
         }
     }
 }
