@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using DemoMVC.Context;
+﻿using DemoMVC.Context;
 using DemoMVC.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
 
+/*
+ Procesos CRUD utilizando SqlClient para la ejecucion de Procedimientos Almacenados
+Sin utilizar clases para asignacion de tipos de dato a los parametros
+ */
 namespace DemoMVC.Controllers
 {
     public class SalonController : Controller

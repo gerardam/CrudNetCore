@@ -1,9 +1,5 @@
 ﻿using DemoMVC.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DemoMVC.Context
 {
@@ -22,5 +18,9 @@ namespace DemoMVC.Context
         public DbSet<Salon> Salones { get; set; }
         public DbSet<SalonTabla> SalonT { get; set; }
         public DbSet<SalonReturn> SalonR { get; set; }
+
+        public DbSet<Padre> Padres { get; set; }
+        public DbSet<PadreTabla> PadreT { get; set; }
+        public DbSet<PadreReturn> PadreR { get; set; }
     }
 }
